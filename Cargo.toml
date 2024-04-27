@@ -1,0 +1,24 @@
+[package]
+name = "erc6492"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+alloy-json-rpc = { git = "https://github.com/alloy-rs/alloy.git", rev = "d68a6b7" }
+alloy-primitives = { version = "0.7.0" }
+alloy-provider = { git = "https://github.com/alloy-rs/alloy.git", rev = "d68a6b7" }
+alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy.git", rev = "d68a6b7" }
+alloy-sol-types = { version = "0.7.0" }
+alloy-transport = { git = "https://github.com/alloy-rs/alloy.git", rev = "d68a6b7" }
+
+[dev-dependencies]
+alloy-node-bindings = { git = "https://github.com/alloy-rs/alloy.git", rev = "d68a6b7" }
+k256 = "0.13"
+rand = "0.8"
+regex = "1"
+tokio = { version = "1", features = ["test-util", "macros", "process"] }
+
+[build-dependencies]
+alloy-primitives = { version = "0.7.0" }
+serde_json = "1"
