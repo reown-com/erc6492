@@ -1,7 +1,11 @@
 use {
+    alloy::{
+        hex,
+        network::Ethereum,
+        primitives::{eip191_hash_message, Address},
+        providers::ReqwestProvider,
+    },
     alloy_node_bindings::{Anvil, AnvilInstance},
-    alloy_primitives::{eip191_hash_message, hex, Address},
-    alloy_provider::{network::Ethereum, ReqwestProvider},
     k256::ecdsa::SigningKey,
     regex::Regex,
     std::process::Stdio,

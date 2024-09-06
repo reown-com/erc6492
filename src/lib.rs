@@ -1,9 +1,10 @@
-use {
-    alloy_primitives::{eip191_hash_message, Address, Bytes},
-    alloy_provider::Provider,
-    alloy_rpc_types::{TransactionInput, TransactionRequest},
-    alloy_sol_types::{sol, SolConstructor},
-    alloy_transport::{Transport, TransportErrorKind},
+use alloy::{
+    primitives::{eip191_hash_message, Address, Bytes},
+    providers::Provider,
+    rpc::types::{TransactionInput, TransactionRequest},
+    sol,
+    sol_types::SolConstructor,
+    transports::{Transport, TransportErrorKind},
 };
 
 const SUCCESS_RESULT: u8 = 0x01;
@@ -30,7 +31,7 @@ impl Verification {
     }
 }
 
-pub type RpcError = alloy_json_rpc::RpcError<TransportErrorKind>;
+pub type RpcError = alloy::transports::RpcError<TransportErrorKind>;
 
 /// Verify a signature using ERC-6492.
 ///
@@ -63,9 +64,7 @@ where
     let transaction_request =
         TransactionRequest::default().input(TransactionInput::new(bytes.into()));
 
-    let result = provider
-        .call(&transaction_request, Default::default())
-        .await;
+    let result = provider.call(&transaction_request).await;
 
     match result {
         Err(e) => {
@@ -100,9 +99,12 @@ mod test_helpers;
 mod test {
     use {
         super::*,
-        alloy_primitives::{address, b256, bytes, Uint},
-        alloy_provider::{network::Ethereum, ReqwestProvider},
-        alloy_sol_types::{SolCall, SolValue},
+        alloy::{
+            network::Ethereum,
+            primitives::{address, b256, bytes, Uint},
+            providers::ReqwestProvider,
+            sol_types::{SolCall, SolValue},
+        },
         k256::ecdsa::SigningKey,
         test_helpers::{
             deploy_contract, sign_message, spawn_anvil, CREATE2_CONTRACT, ERC1271_MOCK_CONTRACT,
