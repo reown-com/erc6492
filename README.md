@@ -23,13 +23,10 @@ erc6492 = { git = "https://github.com/reown-com/erc6492.git", version = "0.1.0" 
 This crate uses [Alloy](https://github.com/alloy-rs) and requires an RPC provider in order to verify all signature types.
 
 ```rust
-use alloy_primitives::{address, bytes, eip191_hash_message};
-use alloy_provider::{network::Ethereum, ReqwestProvider};
-
 let address = address!("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-let message = "xxx";
+let message = eip191_hash_message("Hello, world!");
 let signature = bytes!("aaaa");
-let provider = ReqwestProvider::<Ethereum>::new_http("https://rpc.example.com");
+let provider = ReqwestProvider::<Ethereum>::new_http("https://rpc.example.com".parse().unwrap());
 
 let verification = verify_signature(signature, address, message, provider).await.unwrap();
 if verification.is_valid() {
@@ -37,4 +34,4 @@ if verification.is_valid() {
 }
 ```
 
-See test cases in `src/lib.rs` for more examples.
+See doctest on `verify_signature()` and test cases in `src/lib.rs` for more examples.

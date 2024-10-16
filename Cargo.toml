@@ -8,11 +8,10 @@ license = "MIT OR Apache-2.0"
 alloy = { version = "0.3", features = ["contract", "rpc-types"] }
 
 [dev-dependencies]
+alloy = { version = "0.3", features = ["signer-local"] }
 alloy-node-bindings = { git = "https://github.com/alloy-rs/alloy.git", rev = "d68a6b7" }
-k256 = "0.13"
-rand = "0.8"
 regex = "1"
-tokio = { version = "1", features = ["test-util", "macros", "process"] }
+tokio = { version = "1", features = ["full"] }
 
 [build-dependencies]
 alloy-primitives = { version = "0.8.0" }
