@@ -43,7 +43,7 @@ pub async fn verify_signature<S, M, P, T>(
     signature: S,
     address: Address,
     message: M,
-    provider: P,
+    provider: &P,
 ) -> Result<Verification, RpcError>
 where
     S: Into<Bytes>,
@@ -125,7 +125,7 @@ mod test {
                 .parse()
                 .unwrap(),
         );
-        assert!(verify_signature(signature, address, message, provider)
+        assert!(verify_signature(signature, address, message, &provider)
             .await
             .unwrap()
             .is_valid());
@@ -139,7 +139,7 @@ mod test {
         let message = "xxx";
         let signature = sign_message(message, &private_key);
         let address = Address::from_private_key(&private_key);
-        assert!(verify_signature(signature, address, message, provider)
+        assert!(verify_signature(signature, address, message, &provider)
             .await
             .unwrap()
             .is_valid());
@@ -154,7 +154,7 @@ mod test {
         let mut signature = sign_message(message, &private_key);
         *signature.first_mut().unwrap() = signature.first().unwrap().wrapping_add(1);
         let address = Address::from_private_key(&private_key);
-        assert!(!verify_signature(signature, address, message, provider)
+        assert!(!verify_signature(signature, address, message, &provider)
             .await
             .unwrap()
             .is_valid());
@@ -169,7 +169,7 @@ mod test {
         let signature = sign_message(message, &private_key);
         let mut address = Address::from_private_key(&private_key);
         *address.0.first_mut().unwrap() = address.0.first().unwrap().wrapping_add(1);
-        assert!(!verify_signature(signature, address, message, provider)
+        assert!(!verify_signature(signature, address, message, &provider)
             .await
             .unwrap()
             .is_valid());
@@ -184,7 +184,7 @@ mod test {
         let signature = sign_message(message, &private_key);
         let address = Address::from_private_key(&private_key);
         let message2 = "yyy";
-        assert!(!verify_signature(signature, address, message2, provider)
+        assert!(!verify_signature(signature, address, message2, &provider)
             .await
             .unwrap()
             .is_valid());
@@ -205,7 +205,7 @@ mod test {
         let signature = sign_message(message, &private_key);
 
         assert!(
-            verify_signature(signature, contract_address, message, provider)
+            verify_signature(signature, contract_address, message, &provider)
                 .await
                 .unwrap()
                 .is_valid()
@@ -228,7 +228,7 @@ mod test {
         *signature.first_mut().unwrap() = signature.first().unwrap().wrapping_add(1);
 
         assert!(
-            !verify_signature(signature, contract_address, message, provider)
+            !verify_signature(signature, contract_address, message, &provider)
                 .await
                 .unwrap()
                 .is_valid(),
@@ -253,7 +253,7 @@ mod test {
         );
 
         assert!(
-            !verify_signature(signature, contract_address, message, provider)
+            !verify_signature(signature, contract_address, message, &provider)
                 .await
                 .unwrap()
                 .is_valid()
@@ -278,7 +278,7 @@ mod test {
         let signature = sign_message(message, &private_key);
 
         assert!(
-            !verify_signature(signature, contract_address, message, provider)
+            !verify_signature(signature, contract_address, message, &provider)
                 .await
                 .unwrap()
                 .is_valid()
@@ -301,7 +301,7 @@ mod test {
 
         let message2 = "yyy";
         assert!(
-            !verify_signature(signature, contract_address, message2, provider)
+            !verify_signature(signature, contract_address, message2, &provider)
                 .await
                 .unwrap()
                 .is_valid(),
@@ -383,7 +383,7 @@ mod test {
         );
 
         assert!(
-            verify_signature(signature, predeploy_address, message, provider)
+            verify_signature(signature, predeploy_address, message, &provider)
                 .await
                 .unwrap()
                 .is_valid()
@@ -406,7 +406,7 @@ mod test {
         );
 
         assert!(
-            !verify_signature(signature, predeploy_address, message, provider)
+            !verify_signature(signature, predeploy_address, message, &provider)
                 .await
                 .unwrap()
                 .is_valid(),
@@ -431,7 +431,7 @@ mod test {
         );
 
         assert!(
-            !verify_signature(signature, predeploy_address, message, provider)
+            !verify_signature(signature, predeploy_address, message, &provider)
                 .await
                 .unwrap()
                 .is_valid(),
@@ -456,7 +456,7 @@ mod test {
             predeploy_address.0.first().unwrap().wrapping_add(1);
 
         assert!(
-            !verify_signature(signature, predeploy_address, message, provider)
+            !verify_signature(signature, predeploy_address, message, &provider)
                 .await
                 .unwrap()
                 .is_valid(),
@@ -479,7 +479,7 @@ mod test {
 
         let message2 = "yyy";
         assert!(
-            !verify_signature(signature, predeploy_address, message2, provider)
+            !verify_signature(signature, predeploy_address, message2, &provider)
                 .await
                 .unwrap()
                 .is_valid(),
