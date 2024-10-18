@@ -7,6 +7,8 @@ use alloy::{
     transports::{Transport, TransportErrorKind},
 };
 
+pub mod create;
+
 const SUCCESS_RESULT: u8 = 0x01;
 sol! {
   contract ValidateSigOffchain {
