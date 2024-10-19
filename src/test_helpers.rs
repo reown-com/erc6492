@@ -2,11 +2,11 @@ use {
     alloy::{
         hex,
         network::Ethereum,
-        primitives::{eip191_hash_message, Address},
+        primitives::Address,
         providers::ReqwestProvider,
+        signers::{k256::ecdsa::SigningKey, local::LocalSigner},
     },
     alloy_node_bindings::{Anvil, AnvilInstance},
-    k256::ecdsa::SigningKey,
     regex::Regex,
     std::process::Stdio,
     tokio::process::Command,
@@ -20,7 +20,12 @@ fn format_foundry_dir(path: &str) -> String {
     )
 }
 
-pub fn spawn_anvil() -> (AnvilInstance, String, ReqwestProvider, SigningKey) {
+pub fn spawn_anvil() -> (
+    AnvilInstance,
+    String,
+    ReqwestProvider,
+    LocalSigner<SigningKey>,
+) {
     let anvil = Anvil::at(format_foundry_dir("bin/anvil")).spawn();
     let rpc_url = anvil.endpoint();
     let provider = ReqwestProvider::<Ethereum>::new_http(anvil.endpoint_url());
@@ -29,7 +34,7 @@ pub fn spawn_anvil() -> (AnvilInstance, String, ReqwestProvider, SigningKey) {
         anvil,
         rpc_url,
         provider,
-        SigningKey::from_bytes(&private_key.to_bytes()).unwrap(),
+        LocalSigner::from_signing_key(private_key.into()),
     )
 }
 
@@ -38,11 +43,11 @@ pub const CREATE2_CONTRACT: &str = "Create2";
 
 pub async fn deploy_contract(
     rpc_url: &str,
-    private_key: &SigningKey,
+    signer: &LocalSigner<SigningKey>,
     contract_name: &str,
     constructor_arg: Option<&str>,
 ) -> Address {
-    let key_encoded = hex::encode(private_key.to_bytes());
+    let key_encoded = hex::encode(signer.to_bytes());
     let cache_folder = format_foundry_dir("forge/cache");
     let out_folder = format_foundry_dir("forge/out");
     let mut args = vec![
@@ -83,14 +88,4 @@ pub async fn deploy_contract(
         .unwrap()
         .extract();
     contract_address.parse().unwrap()
-}
-
-pub fn sign_message(message: &str, private_key: &SigningKey) -> Vec<u8> {
-    let hash = eip191_hash_message(message.as_bytes());
-    let (signature, recovery): (k256::ecdsa::Signature, _) = private_key
-        .sign_prehash_recoverable(hash.as_slice())
-        .unwrap();
-    let signature = signature.to_bytes();
-    // need for +27 is mentioned in ERC-1271 reference implementation
-    [&signature[..], &[recovery.to_byte() + 27]].concat()
 }
