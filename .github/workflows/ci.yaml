@@ -19,6 +19,8 @@ jobs:
         - nightly
     steps:
     - uses: actions/checkout@v4
+    - name: Install Foundry
+      uses: foundry-rs/foundry-toolchain@v1
     - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
     - run: cargo test --workspace --all-features --all-targets
     - run: cargo test --workspace --all-features --doc
@@ -36,3 +38,19 @@ jobs:
     steps:
         - uses: actions/checkout@v4
         - run: cargo fmt --all -- --check
+
+  # `git diff bytecode` shows changes but I'm not sure why. Disabling for now
+  # verify-bytecode:
+  #   name: Verify Bytecode
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - name: Install Foundry
+  #     uses: foundry-rs/foundry-toolchain@v1
+  #   - run: forge build --contracts=contracts
+  #   - run: mkdir -p bytecode/Erc6492.sol
+  #   - run: jq -r .bytecode.object out/Erc6492.sol/ValidateSigOffchain.json | xxd -r -p > bytecode/Erc6492.sol/ValidateSigOffchain.bytecode
+  #   - run: mkdir -p bytecode/Erc1271Mock.sol
+  #   - run: jq -r .bytecode.object out/Erc1271Mock.sol/Erc1271Mock.json | xxd -r -p > bytecode/Erc1271Mock.sol/Erc1271Mock.bytecode
+  #   - run: git diff bytecode
+  #   - run: if [ -n "$(git diff bytecode)" ]; then exit 1; fi

@@ -12,21 +12,13 @@ use {
     tokio::process::Command,
 };
 
-fn format_foundry_dir(path: &str) -> String {
-    format!(
-        "{}/../../../../.foundry/{}",
-        std::env::var("OUT_DIR").unwrap(),
-        path
-    )
-}
-
 pub fn spawn_anvil() -> (
     AnvilInstance,
     String,
     ReqwestProvider,
     LocalSigner<SigningKey>,
 ) {
-    let anvil = Anvil::at(format_foundry_dir("bin/anvil")).spawn();
+    let anvil = Anvil::new().spawn();
     let rpc_url = anvil.endpoint();
     let provider = ReqwestProvider::<Ethereum>::new_http(anvil.endpoint_url());
     let private_key = anvil.keys().first().unwrap().clone();
@@ -48,8 +40,6 @@ pub async fn deploy_contract(
     constructor_arg: Option<&str>,
 ) -> Address {
     let key_encoded = hex::encode(signer.to_bytes());
-    let cache_folder = format_foundry_dir("forge/cache");
-    let out_folder = format_foundry_dir("forge/out");
     let mut args = vec![
         "create",
         "--contracts=contracts",
@@ -58,16 +48,12 @@ pub async fn deploy_contract(
         rpc_url,
         "--private-key",
         &key_encoded,
-        "--cache-path",
-        &cache_folder,
-        "--out",
-        &out_folder,
     ];
     if let Some(arg) = constructor_arg {
         args.push("--constructor-args");
         args.push(arg);
     }
-    let output = Command::new(format_foundry_dir("bin/forge"))
+    let output = Command::new("forge")
         .args(args)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())

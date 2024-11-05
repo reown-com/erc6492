@@ -1138,9 +1138,7 @@ version = "0.1.0"
 dependencies = [
  "alloy",
  "alloy-node-bindings",
- "alloy-primitives 0.8.0",
  "regex",
- "serde_json",
  "tokio",
 ]
 
