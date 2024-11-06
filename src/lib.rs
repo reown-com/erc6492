@@ -13,10 +13,8 @@ sol! {
     constructor (address _signer, bytes32 _hash, bytes memory _signature);
   }
 }
-const VALIDATE_SIG_OFFCHAIN_BYTECODE: &[u8] = include_bytes!(concat!(
-    env!("OUT_DIR"),
-    "/../../../../.foundry/forge/out/Erc6492.sol/ValidateSigOffchain.bytecode"
-));
+const VALIDATE_SIG_OFFCHAIN_BYTECODE: &[u8] =
+    include_bytes!("../bytecode/Erc6492.sol/ValidateSigOffchain.bytecode");
 
 #[must_use]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -374,10 +372,8 @@ mod test {
         );
     }
 
-    const ERC1271_MOCK_BYTECODE: &[u8] = include_bytes!(concat!(
-        env!("OUT_DIR"),
-        "/../../../../.foundry/forge/out/Erc1271Mock.sol/Erc1271Mock.bytecode"
-    ));
+    const ERC1271_MOCK_BYTECODE: &[u8] =
+        include_bytes!("../bytecode/Erc1271Mock.sol/Erc1271Mock.bytecode");
     const ERC6492_MAGIC_BYTES: [u16; 16] = [
         0x6492, 0x6492, 0x6492, 0x6492, 0x6492, 0x6492, 0x6492, 0x6492, 0x6492, 0x6492, 0x6492,
         0x6492, 0x6492, 0x6492, 0x6492, 0x6492,
