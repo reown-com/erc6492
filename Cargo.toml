@@ -5,10 +5,10 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [dependencies]
-alloy = { version = "0.3", features = ["contract", "rpc-types"] }
+alloy = { version = "0.6.1", features = ["contract", "rpc-types"] }
 
 [dev-dependencies]
-alloy = { version = "0.3", features = ["signer-local"] }
+alloy = { version = "0.6.1", features = ["signer-local"] }
 alloy-node-bindings = { git = "https://github.com/alloy-rs/alloy.git", rev = "d68a6b7" }
 regex = "1"
 tokio = { version = "1", features = ["full"] }
