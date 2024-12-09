@@ -42,6 +42,7 @@ pub async fn deploy_contract(
     let key_encoded = hex::encode(signer.to_bytes());
     let mut args = vec![
         "create",
+        "--broadcast",
         "--contracts=contracts",
         contract_name,
         "--rpc-url",

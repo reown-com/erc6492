@@ -1,4 +1,4 @@
-# Universal Etheruem signature verification with ERC-6492
+# Universal Rust Etheruem signature verification with ERC-6492
 
 This crate verifies any Ethereum signature including:
 
