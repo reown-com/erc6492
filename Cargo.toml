@@ -4,11 +4,22 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 
+[workspace.dependencies]
+alloy = { version = "0.7.3", default-features = false }
+
 [dependencies]
-alloy = { version = "0.7.3", features = ["contract", "rpc-types"] }
+alloy = { workspace = true, features = [
+    "reqwest",
+    "sol-types",
+    "providers",
+    "rpc-types",
+] }
 
 [dev-dependencies]
-alloy = { version = "0.7.3", features = ["signer-local"] }
-alloy-node-bindings = { git = "https://github.com/alloy-rs/alloy.git", tag = "v0.7.3" }
-regex = "1"
-tokio = { version = "1", features = ["full"] }
+alloy = { workspace = true, features = ["signer-local"] }
+alloy-node-bindings = { git = "https://github.com/alloy-rs/alloy.git", tag = "v0.7.3", default-features = false }
+regex = { version = "1", default-features = false }
+tokio = { version = "1", default-features = false, features = [
+    "process",
+    "rt-multi-thread",
+] }
