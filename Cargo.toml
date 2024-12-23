@@ -5,7 +5,7 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-alloy = { version = "0.7.3", default-features = false }
+alloy = { version = "0.8.3", default-features = false }
 
 [dependencies]
 alloy = { workspace = true, features = [
@@ -17,7 +17,7 @@ alloy = { workspace = true, features = [
 
 [dev-dependencies]
 alloy = { workspace = true, features = ["signer-local"] }
-alloy-node-bindings = { git = "https://github.com/alloy-rs/alloy.git", tag = "v0.7.3", default-features = false }
+alloy-node-bindings = { git = "https://github.com/alloy-rs/alloy.git", tag = "v0.8.3", default-features = false }
 regex = { version = "1", default-features = false }
 tokio = { version = "1", default-features = false, features = [
     "process",
