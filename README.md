@@ -6,6 +6,8 @@ This crate verifies any Ethereum signature including:
 - Smart contract wallets with [ERC-1271](https://eips.ethereum.org/EIPS/eip-1271)
 - Predeploy contract wallets with [ERC-6492](https://eips.ethereum.org/EIPS/eip-6492)
 
+This crate is implemented using a single `eth_call` RPC request, and is described in the [off-chain validation section](https://eips.ethereum.org/EIPS/eip-6492#off-chain-validation) of the ERC-6492 spec.
+
 ## Install
 
 ```bash
@@ -15,8 +17,12 @@ cargo add erc6492 --git https://github.com/reown-com/erc6492
 or
 
 ```toml
-erc6492 = { git = "https://github.com/reown-com/erc6492.git", version = "0.1.0" }
+erc6492 = { git = "https://github.com/reown-com/erc6492.git" }
 ```
+
+We recommend pinning to a commit ref to avoid unexpected breaking changes while in v0.
+
+We will publish to crates.io soon.
 
 ## Usage
 
