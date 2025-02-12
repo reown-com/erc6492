@@ -1,12 +1,11 @@
 use {
     alloy::{
         hex,
-        network::Ethereum,
+        node_bindings::{Anvil, AnvilInstance},
         primitives::Address,
-        providers::ReqwestProvider,
+        providers::{Provider, ProviderBuilder},
         signers::{k256::ecdsa::SigningKey, local::LocalSigner},
     },
-    alloy_node_bindings::{Anvil, AnvilInstance},
     regex::Regex,
     std::process::Stdio,
     tokio::process::Command,
@@ -15,12 +14,12 @@ use {
 pub fn spawn_anvil() -> (
     AnvilInstance,
     String,
-    ReqwestProvider,
+    impl Provider,
     LocalSigner<SigningKey>,
 ) {
     let anvil = Anvil::new().spawn();
     let rpc_url = anvil.endpoint();
-    let provider = ReqwestProvider::<Ethereum>::new_http(anvil.endpoint_url());
+    let provider = ProviderBuilder::new().on_http(anvil.endpoint_url());
     let private_key = anvil.keys().first().unwrap().clone();
     (
         anvil,

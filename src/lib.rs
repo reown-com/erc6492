@@ -4,7 +4,7 @@ use alloy::{
     rpc::types::{TransactionInput, TransactionRequest},
     sol,
     sol_types::SolConstructor,
-    transports::{Transport, TransportErrorKind},
+    transports::TransportErrorKind,
 };
 
 pub mod create;
@@ -41,7 +41,7 @@ pub type RpcError = alloy::transports::RpcError<TransportErrorKind>;
 /// If an error occurs while making the RPC call, it will return `Err(RpcError)`.
 /// ```rust
 /// # use alloy::primitives::eip191_hash_message;
-/// # use alloy::providers::{network::Ethereum, ReqwestProvider};
+/// # use alloy::providers::ProviderBuilder;
 /// # use alloy::signers::{local::LocalSigner, SignerSync};
 /// # use erc6492::verify_signature;
 /// #
@@ -53,21 +53,17 @@ pub type RpcError = alloy::transports::RpcError<TransportErrorKind>;
 /// # let signature = account.sign_message_sync(message.as_bytes()).unwrap().as_bytes().into();
 /// # let address = account.address();
 /// #
-/// # let provider = ReqwestProvider::<Ethereum>::new_http("https://rpc.sepolia.org".parse().unwrap());
+/// # let provider = ProviderBuilder::new().on_http("https://rpc.sepolia.org".parse().unwrap());
 /// let verification = verify_signature(signature, address, message_hash, &provider).await.unwrap();
 /// assert!(verification.is_valid());
 /// # }
 /// ```
-pub async fn verify_signature<P, T>(
+pub async fn verify_signature(
     signature: Bytes,
     address: Address,
     message_hash: B256,
-    provider: &P,
-) -> Result<Verification, RpcError>
-where
-    P: Provider<T>,
-    T: Transport + Clone,
-{
+    provider: &impl Provider,
+) -> Result<Verification, RpcError> {
     let call = ValidateSigOffchain::constructorCall {
         _signer: address,
         _hash: message_hash,
@@ -117,9 +113,8 @@ mod test {
     use {
         super::*,
         alloy::{
-            network::Ethereum,
             primitives::{address, b256, bytes, eip191_hash_message, Uint},
-            providers::ReqwestProvider,
+            providers::ProviderBuilder,
             signers::{k256::ecdsa::SigningKey, local::LocalSigner, SignerSync},
             sol_types::{SolCall, SolValue},
         },
@@ -136,7 +131,7 @@ mod test {
         let message_hash = eip191_hash_message(message);
         let signature = bytes!("aaaa");
 
-        let provider = ReqwestProvider::<Ethereum>::new_http(
+        let provider = ProviderBuilder::new().on_http(
             "https://rpc.walletconnect.com/v1?chainId=eip155:1&projectId=xxx"
                 .parse()
                 .unwrap(),
