@@ -21,3 +21,6 @@ tokio = { version = "1", default-features = false, features = [
     "process",
     "rt-multi-thread",
 ] }
+
+[patch.crates-io]
+alloy = { git = "https://github.com/chris13524/alloy.git", branch = "fix/tokio-interval-wasm" }
