@@ -77,7 +77,7 @@ pub async fn verify_signature(
     let transaction_request =
         TransactionRequest::default().input(TransactionInput::new(bytes.into()));
 
-    let result = provider.call(&transaction_request).await;
+    let result = provider.call(transaction_request).await;
 
     match result {
         Err(e) => {
@@ -131,7 +131,7 @@ mod test {
         let message_hash = eip191_hash_message(message);
         let signature = bytes!("aaaa");
 
-        let provider = ProviderBuilder::new().on_http(
+        let provider = ProviderBuilder::new().connect_http(
             "https://rpc.walletconnect.com/v1?chainId=eip155:1&projectId=xxx"
                 .parse()
                 .unwrap(),
