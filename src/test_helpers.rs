@@ -19,7 +19,7 @@ pub fn spawn_anvil() -> (
 ) {
     let anvil = Anvil::new().spawn();
     let rpc_url = anvil.endpoint();
-    let provider = ProviderBuilder::new().on_http(anvil.endpoint_url());
+    let provider = ProviderBuilder::new().connect_http(anvil.endpoint_url());
     let private_key = anvil.keys().first().unwrap().clone();
     (
         anvil,
